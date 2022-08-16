@@ -23,7 +23,7 @@ const List = () => {
   // );
 
   const { data, loading, error, reFetch } = useFetch(
-    `/hotels?citys=${destination}&min=${min || 0 }&max=${max || 999}`
+    `/hotels?citys=${destination}&min=${min || 0 }&max=${max || 9999}`
   );
 
 

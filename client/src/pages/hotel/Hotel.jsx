@@ -11,31 +11,19 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 const Hotel = () => {
+
+  const location = useLocation()
+  const id = location.pathname.split("/")[2];
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const photos = [
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/luxury-room/detail/1965luxury-room-bedroom-the-oberoi-mumbai--2.jpg?w=724&extension=webp&hash=4c6ce7a7270e3e74617e9f727cc03aab",
-    },
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/premier-ocean-view-room/detail/premier-ocean-view-room-2.jpg?w=724&extension=webp&hash=f8a70d3b4c3eff16657f2866a3b92582",
-    },
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/deluxe-suite/detail/1858-deluxe-suite-living-room.jpg?w=724&extension=webp&hash=e535f1dcc2c06f4e5796cef4afcdc926",
-    },
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/presidential-suites/detail/tom-kohinoor---presedential-suite-living-room-2.jpg?w=724&extension=webp&hash=a4c04f0fa33e88436bfded24c25d31a0",
-    },
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/presidential-suites/detail/kohinoor-suite-bathroom-the-oberoi-mumbai.jpg?extension=webp",
-    },
-    {
-      src: "https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/room-and-suites/oberoi-executive-suites-with-ocean-view/detail/executive-suites-with-or-without-ocean-views-724-x-407.jpg?w=724&extension=webp&hash=09fff99b2c53699ad6e91232f2322dcf",
-    },
-  ];
+  const { data , loading , error } = useFetch(`/hotels/find/${id}`)
+
+  
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -58,6 +46,8 @@ const Hotel = () => {
     <div>
       <Navbar />
       <Header type="list" />
+      { loading ? ("loading"
+      ): (
       <div className="hotelContainer">
         {open && (
           <div className="slider">
@@ -72,7 +62,7 @@ const Hotel = () => {
               onClick={() => handleMove("l")}
             />
             <div className="sliderWrapper">
-              <img src={photos[slideNumber].src} alt="" className="sliderImg" />
+              <img src={data.photos[slideNumber]} alt="" className="sliderImg" />
             </div>
             <FontAwesomeIcon
               icon={faCircleArrowRight}
@@ -83,23 +73,23 @@ const Hotel = () => {
         )}
         <div className="hotelWrapper">
           <button className="bookNow">Reserve or Book Now!</button>
-          <h1 className="hotelTitle">Aashish House</h1>
+          <h1 className="hotelTitle">{data.name}</h1>
           <div className="hotelAddress">
             <FontAwesomeIcon icon={faLocationDot} />
-            <span>Mumbai - The Oberoi, Mumbai</span>
+            <span>{data.address}</span>
           </div>
           <span className="hotelDistance">
-            Excellent location – 500m from center
+            Excellent location {data.distance} m from center
           </span>
           <span className="hotelPriceHighlight">
-            Book a stay over ₹19400 at this property and get a free airport taxi
+            Book a stay over ₹{data.chepestPrice}at this property and get a free airport taxi
           </span>
           <div className="hotelImages">
-            {photos.map((photo, i) => (
+            {data.photos?.map((photo, i) => (
               <div className="hotelImgWrapper" key={i}>
                 <img
                   onClick={() => handleOpen(i)}
-                  src={photo.src}
+                  src={photo}
                   alt=""
                   className="hotelImg"
                 />
@@ -108,20 +98,9 @@ const Hotel = () => {
           </div>
           <div className="hotelDetails">
             <div className="hotelDetailsTexts">
-              <h1 className="hotelTitle">Stay in the heart of City</h1>
+              <h1 className="hotelTitle">{data.title}</h1>
               <p className="hotelDesc">
-                "Bird’s eye views across the ocean".
-                <p>
-                Especially designed for you to relax and unwind. 
-                The sophisticated interiors of these suites flow through a comfortable living room into a king size master bedroom and a 
-                spectacular bathroom. 
-                Wall to wall windows throughout, frame magnificent ocean views; 
-                these can even be enjoyed while relaxing in the bathtub. 
-                An experience made all the more special when complimented by our warm hospitality, 24 hours a day.
-                For your privacy, there is a separate entrance for your personal butler and a fully equipped pantry. 
-                And for your wellbeing, there is a treadmill for you to work out on. 
-                An unrivalled stay experience in Mumbai. This suite has an optional extra interconnecting twin bedroom.
-                </p>
+              {data.desc}
               </p>
             </div>
             <div className="hotelDetailsPrice">
@@ -139,7 +118,8 @@ const Hotel = () => {
         </div>
         <MailList />
         <Footer />
-      </div>
+      </div> 
+      )}
     </div>
   );
 };
