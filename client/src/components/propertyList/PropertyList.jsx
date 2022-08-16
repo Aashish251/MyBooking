@@ -2,7 +2,6 @@ import { hotelApiUrl } from "../..";
 import useFetch from "../../hooks/useFetch";
 import "./propertyList.css";
 
-// const hotelApiUrl = `http://localhost:8800/api`
 const PropertyList = () => {
   const { data, loading, error } = useFetch(
     `${hotelApiUrl}/hotels/countByType`

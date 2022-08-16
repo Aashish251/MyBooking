@@ -7,21 +7,9 @@ import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import SearchItem from "../../components/searchItem/SearchItem";
 import useFetch from "../../hooks/useFetch";
-import { hotelApiUrl } from "../..";
+
 
 const List = () => {
-
-  const dateFormat = [
-    {
-      startDate: '08/21/1999',
-      endDate: '01/01/2023'
-    },
-    {
-      startDate: '08/21/1999',
-      endDate: '01/01/2023'
-    },
-  ]
-  
   const location = useLocation();
   const [destination, setDestination] = useState(location.state.destination);
   const [dates, setDates] = useState(location.state.dates);
@@ -30,9 +18,14 @@ const List = () => {
   const [min, setMin] = useState(undefined);
   const [max, setMax] = useState(undefined);
 
+  // const { data, loading, error, reFetch } = useFetch(
+  //   `${hotelApiUrl}/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`
+  // );
+
   const { data, loading, error, reFetch } = useFetch(
-    `${hotelApiUrl}/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`
+    `/hotels?citys=${destination}&min=${min || 0 }&max=${max || 999}`
   );
+
 
   const handleClick = () => {
     reFetch();
